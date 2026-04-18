@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+enum EventType {
+  // 
+  IDENTITY_REGISTERED  = 0;
+  CHALLENGE_ISSUED     = 1;
+  HANDSHAKE_COMPLETED  = 2;
+  USER_CONNECTED       = 3;
+  USER_DISCONNECTED    = 4;
+  SYNC_REQUESTED       = 5;
+  SYNC_RESPONDED       = 6;
+  EVENT_REJECTED       = 7;
+}
+
+message Event {
+  string    id              = 1;  // ULID
+  EventType type            = 2;
+  string    sender_id       = 3;  // 公開鍵フィンガープリント
+  int64     timestamp       = 4;  // Unix timestamp (ms)
+  uint64    sequence_number = 5;  // 順序保証 global
+  bytes     payload         = 6;  // EventTypeごとのprotobuf
+  bytes     signature       = 7;  // sign(id+type+sender_id+timestamp+sequence_number+payload)
+}
