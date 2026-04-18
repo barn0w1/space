@@ -1,23 +1,23 @@
 syntax = "proto3";
 
 enum EventType {
-  // 
-  IDENTITY_REGISTERED  = 0;
-  CHALLENGE_ISSUED     = 1;
-  HANDSHAKE_COMPLETED  = 2;
-  USER_CONNECTED       = 3;
-  USER_DISCONNECTED    = 4;
-  SYNC_REQUESTED       = 5;
-  SYNC_RESPONDED       = 6;
-  EVENT_REJECTED       = 7;
+  EVENT_TYPE_UNSPECIFIED = 0;
+  IDENTITY_REGISTERED  = 1;
+  CHALLENGE_ISSUED     = 2;
+  HANDSHAKE_COMPLETED  = 3;
+  USER_CONNECTED       = 4;
+  USER_DISCONNECTED    = 5;
+  SYNC_REQUESTED       = 6;
+  SYNC_RESPONDED       = 7;
+  EVENT_REJECTED       = 8;
 }
 
 message Event {
-  string    id              = 1;  // ULID
+  string    id              = 1;  // ULID、Clientが生成
   EventType type            = 2;
   string    sender_id       = 3;  // 公開鍵フィンガープリント
-  int64     timestamp       = 4;  // Unix timestamp (ms)
-  uint64    sequence_number = 5;  // 順序保証 global
-  bytes     payload         = 6;  // EventTypeごとのprotobuf
-  bytes     signature       = 7;  // sign(id+type+sender_id+timestamp+sequence_number+payload)
+  int64     timestamp       = 4;  // Unix timestamp (ms)、Clientが生成
+  uint64    sequence_number = 5;  // サーバーが採番、署名対象外
+  bytes     payload         = 6;
+  bytes     signature       = 7;  // sign(id+type+sender_id+timestamp+payload)
 }
