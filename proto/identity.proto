@@ -1,4 +1,4 @@
-syntax = "proto3";
+edition = "2024";
 
 // Identityを登録するときのpayload
 message RegisterIdentity {

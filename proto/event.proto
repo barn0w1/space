@@ -1,4 +1,4 @@
-syntax = "proto3";
+edition = "2024";
 
 message Event {
   bytes  sender_id  = 1;  // Ed25519 public key
