@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Identityを登録するときのpayload
+message RegisterIdentity {
+  bytes public_key = 1;  // Ed25519 public key
+}
+
+// 接続時のChallenge
+message Challenge {
+  bytes nonce = 1;  // Observerが発行するランダムな値
+}
+
+// Challengeへの応答
+message Handshake {
+  bytes public_key      = 1;  // 自分の公開鍵
+  bytes signed_nonce    = 2;  // nonceに署名したもの
+}

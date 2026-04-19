@@ -9,5 +9,5 @@ message Event {
 
 message NetworkEvent {
   Event  event           = 1;
-  uint64 sequence_number = 2;  // いつ観察されたか
+  uint64 sequence_number = 2;
 }
