@@ -7,6 +7,12 @@ message Event {
   bytes  signature       = 4;  // 本人証明
 }
 
+message EncryptedPayload {
+  bytes nonce      = 1;
+  bytes ciphertext = 2;
+  bytes key_hash   = 3;
+}
+
 message NetworkEvent {
   Event  event           = 1;
   uint64 sequence_number = 2;
