@@ -1,19 +1,19 @@
 syntax = "proto3";
 
 message Event {
-  string sender_id       = 1;  // 誰が
-  int64  timestamp       = 2;  // いつ
-  bytes  payload         = 3;  // 何を
-  bytes  signature       = 4;  // 本人証明
+  bytes  sender_id  = 1;  // Ed25519 public key
+  int64  timestamp  = 2;  // Unix timestamp
+  bytes  payload    = 3;  // arbitrary payload
+  bytes  signature  = 4;  // Ed25519 signature of (sender_id + timestamp + payload)
 }
 
 message EncryptedPayload {
-  bytes nonce      = 1;
-  bytes ciphertext = 2;
-  bytes key_hash   = 3;
+  bytes nonce      = 1;  // AES-256-GCM nonce
+  bytes ciphertext = 2;  // AES-256-GCM encrypted data
+  bytes key_hash   = 3;  // hash of the encryption key
 }
 
 message NetworkEvent {
   Event  event           = 1;
-  uint64 sequence_number = 2;
+  uint64 sequence_number = 2;  // assigned by Observer
 }
