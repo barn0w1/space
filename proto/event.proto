@@ -8,10 +8,9 @@ message EncryptedPayload {
 
 message Event {
   bytes  sender_id  = 1;  // Ed25519 public key
-  int64  timestamp  = 2;  // client timestamp
   string namespace  = 3;  // e.g. "space.chat.message"
   bytes  payload    = 4;
-  bytes  signature  = 5;  // sign(sender_id + timestamp + namespace + payload)
+  bytes  signature  = 5;  // sign(sender_id + namespace + payload)
 }
 
 message NetworkEvent {
