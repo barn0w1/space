@@ -1,4 +1,6 @@
-edition = "2024";
+syntax = "proto3";
+package identity;
+
 
 // Identityを登録するときのpayload
 message RegisterIdentity {
