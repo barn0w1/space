@@ -1,15 +1,39 @@
 syntax = "proto3";
 package space;
 
-enum SignatureAlgorithm {
-  UNKNOWN    = 0;
-  ED25519    = 1;
-  ML_DSA_44  = 2;
-  ML_DSA_65  = 3;
-  ML_DSA_87  = 4;
-}
+// Hash:     BLAKE3, 256-bit output (fixed)
 
-// Hash: BLAKE3, 256-bit output (fixed)
+/*
+#### Scalar Values
+
+Scalar value types are converted as follows:
+
+| Protobuf Type | Rust Type |
+| --- | --- |
+| `double` | `f64` |
+| `float` | `f32` |
+| `int32` | `i32` |
+| `int64` | `i64` |
+| `uint32` | `u32` |
+| `uint64` | `u64` |
+| `sint32` | `i32` |
+| `sint64` | `i64` |
+| `fixed32` | `u32` |
+| `fixed64` | `u64` |
+| `sfixed32` | `i32` |
+| `sfixed64` | `i64` |
+| `bool` | `bool` |
+| `string` | `String` |
+| `bytes` | `Vec<u8>` |
+*/
+
+enum SignatureAlgorithm {
+  UNKNOWN   = 0;
+  ED25519   = 1;
+  ML_DSA_44 = 2;
+  ML_DSA_65 = 3;
+  ML_DSA_87 = 4;
+}
 
 message Event {
   bytes              p_id      = 1; // Participant's public key
@@ -18,10 +42,10 @@ message Event {
   SignatureAlgorithm algorithm = 4; // Participant's signature algorithm
   bytes              p_sig     = 5; // Participant's signature
   //  p_sig = sign(
-  //    BLAKE3(p_id)              ||
-  //    BLAKE3(namespace)         ||
-  //    BLAKE3(payload)           ||
-  //    BLAKE3(algorithm)   
+  //    BLAKE3(p_id)        ||
+  //    BLAKE3(namespace)   ||
+  //    BLAKE3(payload)     ||
+  //    BLAKE3(algorithm)
   //  )
 }
 
@@ -32,13 +56,13 @@ message NetworkEvent {
   SignatureAlgorithm algorithm = 4; // Observer's signature algorithm
   bytes              o_sig     = 5; // Observer's signature
   //  o_sig = sign(
-  //    BLAKE3(o_id)              ||
-  //    BLAKE3(event.p_id)        ||
-  //    BLAKE3(event.namespace)   ||
-  //    BLAKE3(event.payload)     ||
-  //    BLAKE3(event.algorithm)   ||
-  //    BLAKE3(event.p_sig)       ||
-  //    BLAKE3(algorithm)         ||
+  //    BLAKE3(o_id)            ||
+  //    BLAKE3(event.p_id)      ||
+  //    BLAKE3(event.namespace) ||
+  //    BLAKE3(event.payload)   ||
+  //    BLAKE3(event.algorithm) ||
+  //    BLAKE3(event.p_sig)     ||
+  //    BLAKE3(algorithm)       ||
   //    BLAKE3(seq)
-  // )
+  //  )
 }
