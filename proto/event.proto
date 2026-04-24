@@ -1,21 +1,44 @@
 syntax = "proto3";
-package event;
+package space;
 
-message EncryptedPayload {
-  bytes nonce      = 1;  // AES-256-GCM nonce
-  bytes ciphertext = 2;  // AES-256-GCM encrypted data
-  bytes key_hash   = 3;  // hash of the encryption key
+enum SignatureAlgorithm {
+  UNKNOWN    = 0;
+  ED25519    = 1;
+  ML_DSA_44  = 2;
+  ML_DSA_65  = 3;
+  ML_DSA_87  = 4;
 }
 
+// Hash: BLAKE3, 256-bit output (fixed)
+
 message Event {
-  bytes  sender_id  = 1;  // Ed25519 public key
-  string namespace  = 2;  // e.g. "space.chat.message"
-  bytes  payload    = 3;
-  bytes  signature  = 4;  // sign(sender_id + namespace + payload)
+  bytes              p_id      = 1; // Participant's public key
+  string             namespace = 2; // field identifier
+  bytes              payload   = 3; // arbitrary bytes
+  SignatureAlgorithm algorithm = 4; // Participant's signature algorithm
+  bytes              p_sig     = 5; // Participant's signature
+  //  p_sig = sign(
+  //    BLAKE3(p_id)              ||
+  //    BLAKE3(namespace)         ||
+  //    BLAKE3(payload)           ||
+  //    BLAKE3(algorithm)   
+  //  )
 }
 
 message NetworkEvent {
-  Event  event            = 1;
-  uint64 sequence_number  = 2;  // assigned by Observer
-  int64  observer_timestamp = 3;  // assigned by Observer
+  bytes              o_id      = 1; // Observer's public key
+  Event              event     = 2; // original event
+  uint64             seq       = 3; // global monotonic sequence
+  SignatureAlgorithm algorithm = 4; // Observer's signature algorithm
+  bytes              o_sig     = 5; // Observer's signature
+  //  o_sig = sign(
+  //    BLAKE3(o_id)              ||
+  //    BLAKE3(event.p_id)        ||
+  //    BLAKE3(event.namespace)   ||
+  //    BLAKE3(event.payload)     ||
+  //    BLAKE3(event.algorithm)   ||
+  //    BLAKE3(event.p_sig)       ||
+  //    BLAKE3(algorithm)         ||
+  //    BLAKE3(seq)
+  // )
 }

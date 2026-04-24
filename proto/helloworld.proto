@@ -1,6 +1,0 @@
-syntax = "proto3";
-package helloworld;
-
-message HelloWorld {
-  string message = 1;  // "Hello, World!"
-}
